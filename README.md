@@ -2,4 +2,4 @@
 Tic-Tac-Toe game using Python Pygame library
 
 ## Game Play
-![Game Play](images/game_play.gif)
+![Game Play](/images/game_play.gif)
