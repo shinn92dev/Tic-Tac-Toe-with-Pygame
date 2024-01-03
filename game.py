@@ -12,9 +12,9 @@ CELL_CENTER = vec2(CELL_SIZE / 2)
 class TictactoeTool:
     def __init__(self, game):
         self.game = game
-        self.board_image = self.get_image(path="../images/board.png", res=[WINDOW_SIZE] * 2)
-        self.O_image = self.get_image(path="../images/o.png", res=[CELL_SIZE] * 2)
-        self.X_image = self.get_image(path="../images/x.png", res=[CELL_SIZE] * 2)
+        self.board_image = self.get_image(path="images/board.png", res=[WINDOW_SIZE] * 2)
+        self.O_image = self.get_image(path="images/o.png", res=[CELL_SIZE] * 2)
+        self.X_image = self.get_image(path="images/x.png", res=[CELL_SIZE] * 2)
 
         self.game_array = [[INF, INF, INF],
                            [INF, INF, INF],
@@ -45,11 +45,14 @@ class TictactoeTool:
         current_cell = vec2(pg.mouse.get_pos()) // CELL_SIZE
         col, row = map(int, current_cell)
         left_click = pg.mouse.get_pressed()[0]
-        if left_click and self.game_array[row][col] == INF and not self.winner:
-            self.game_array[row][col] = self.player
-            self.player = not self.player
-            self.game_steps += 1
-            self.check_winner()
+        try:
+            if left_click and self.game_array[row][col] == INF and not self.winner:
+                self.game_array[row][col] = self.player
+                self.player = not self.player
+                self.game_steps += 1
+                self.check_winner()
+        except IndexError:
+            pass
 
     def draw_objects(self):
         for y, row in enumerate(self.game_array):
@@ -64,10 +67,17 @@ class TictactoeTool:
             label = self.font.render(label_text, True, 'white', 'red')
             self.game.screen.blit(label, (WINDOW_SIZE // 2 - label.get_width() // 2, WINDOW_SIZE // 4))
 
+    def draw_game_over(self):
+        if self.game_steps >= 9:
+            label_text = f"Game Over!"
+            label = self.font.render(label_text, True, 'white', 'red')
+            self.game.screen.blit(label, (WINDOW_SIZE // 2 - label.get_width() // 2, WINDOW_SIZE // 4))
+
     def draw(self):
         self.game.screen.blit(self.board_image, (0, 0))
         self.draw_objects()
         self.draw_winner()
+        self.draw_game_over()
 
     @staticmethod
     def get_image(path, res):
